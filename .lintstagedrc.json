@@ -1,0 +1,6 @@
+{
+  "*.{js,cjs,mjs,jsx,ts,tsx}": ["oxfmt --write", "oxlint"],
+  "**/package.json": "oxfmt --write",
+  ".oxfmtrc.json": "oxfmt --write",
+  ".lintstagedrc.json": "oxfmt --write"
+}

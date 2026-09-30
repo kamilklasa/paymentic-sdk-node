@@ -1,0 +1,29 @@
+{
+  "name": "paymentic-node-workspace",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter @kamilklasa/paymentic-sdk-node build",
+    "typecheck": "pnpm --filter @kamilklasa/paymentic-sdk-node typecheck && pnpm --filter paymentic-next-example check",
+    "lint": "oxlint packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts commitlint.config.cjs",
+    "format": "oxfmt packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts package.json packages/sdk/package.json examples/nextjs/package.json .oxfmtrc.json .lintstagedrc.json commitlint.config.cjs",
+    "format:check": "oxfmt --check packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts package.json packages/sdk/package.json examples/nextjs/package.json .oxfmtrc.json .lintstagedrc.json commitlint.config.cjs",
+    "test": "pnpm build && node --test packages/sdk/test/*.test.mjs scripts/*.test.mjs",
+    "check:example": "pnpm build && node --test examples/nextjs/checkout.test.mjs && pnpm --filter paymentic-next-example build",
+    "check:package": "pnpm build && node scripts/check-package.mjs",
+    "prepare": "husky",
+    "check:release": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm check:example && pnpm check:package"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.32.1"
+}

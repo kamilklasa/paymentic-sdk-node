@@ -1,0 +1,1 @@
+The separate `php-sdk/` reference clone is copyright (c) 2025 Paymentic Sp. z o.o. and licensed under MIT. Its source is not part of this repository or the npm package. The PHP implementation was consulted for operation coverage and example response shape; the pinned official OpenAPI contract defines HTTP behavior.

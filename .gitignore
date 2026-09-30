@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+.idea/
+php-sdk/
+docs/
+.scratch/
+.env
+.env.*
+!.env.example
+
+# Local agent setup and generated artifacts
+/AGENTS.md
+.DS_Store
+*.tgz
+*.log

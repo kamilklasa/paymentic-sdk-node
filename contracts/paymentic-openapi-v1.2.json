@@ -1,0 +1,3584 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Paymentic Payment API",
+        "description": "Paymentic REST API for accepting online payments — BLIK, fast bank transfers and cards. Create transactions, check statuses, issue refunds and receive webhook notifications.",
+        "version": "1.2"
+    },
+    "servers": [
+        {
+            "url": "https://api.paymentic.com/v1_2"
+        },
+        {
+            "url": "https://api.sandbox.paymentic.com/v1_2"
+        }
+    ],
+    "paths": {
+        "/payment/points/{pointId}/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "List transactions",
+                "operationId": "get-transactions",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "name": "filter[status]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "PAID"
+                        }
+                    },
+                    {
+                        "name": "filter[amount]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "100.50"
+                        }
+                    },
+                    {
+                        "name": "filter[externalReferenceId]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "EXT-REF-123"
+                        }
+                    },
+                    {
+                        "name": "filter[orderId]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "ORD-12345"
+                        }
+                    },
+                    {
+                        "name": "filter[customerName]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "John Doe"
+                        }
+                    },
+                    {
+                        "name": "filter[customerEmail]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "john@example.com"
+                        }
+                    },
+                    {
+                        "name": "filter[blikId]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "BLIK123"
+                        }
+                    },
+                    {
+                        "name": "filter[cardBin]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 6,
+                            "minLength": 6,
+                            "example": "411111"
+                        }
+                    },
+                    {
+                        "name": "filter[providerId]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "blik"
+                        }
+                    },
+                    {
+                        "name": "filter[createdAt]",
+                        "in": "query",
+                        "description": "Date range in format: YYYY-MM-DDTHH:MM:SSZ,YYYY-MM-DDTHH:MM:SSZ",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2024-01-01T00:00:00Z,2024-12-31T23:59:59Z"
+                        }
+                    },
+                    {
+                        "name": "filter[paidAt]",
+                        "in": "query",
+                        "description": "Date range in format: YYYY-MM-DDTHH:MM:SSZ,YYYY-MM-DDTHH:MM:SSZ",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2024-01-01T00:00:00Z,2024-12-31T23:59:59Z"
+                        }
+                    },
+                    {
+                        "name": "query[full]",
+                        "in": "query",
+                        "description": "Full-text search across all searchable fields",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "John"
+                        }
+                    },
+                    {
+                        "name": "query[customerName]",
+                        "in": "query",
+                        "description": "Search by customer name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "John Doe"
+                        }
+                    },
+                    {
+                        "name": "query[customerEmail]",
+                        "in": "query",
+                        "description": "Search by customer email",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "john@example.com"
+                        }
+                    },
+                    {
+                        "name": "query[title]",
+                        "in": "query",
+                        "description": "Search by transaction title",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Order #12345"
+                        }
+                    },
+                    {
+                        "name": "page[number]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "page[size]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 25
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GetTransactionsResource"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "pageSize": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 320
+                                                },
+                                                "totalPages": {
+                                                    "type": "integer",
+                                                    "example": 13
+                                                },
+                                                "from": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ],
+                                                    "example": 1
+                                                },
+                                                "to": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ],
+                                                    "example": 25
+                                                },
+                                                "links": {
+                                                    "properties": {
+                                                        "first": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "format": "url"
+                                                        },
+                                                        "prev": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "format": "url"
+                                                        },
+                                                        "next": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "format": "url"
+                                                        },
+                                                        "last": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "format": "url"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 11
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create payment transaction",
+                "description": "Creates a payment transaction and returns a redirect URL for the payer. Supports BLIK, cards and fast bank transfers.",
+                "operationId": "create-payment-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Create payment transaction",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTransactionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CreateTransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotActiveExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnsupportedMediaTypeHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 10
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transaction details",
+                "operationId": "get-transaction-details",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/GetTransactionDetailsResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 20
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}/capture": {
+            "patch": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Capture a paid transaction",
+                "operationId": "capture-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {}
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotActiveExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionInvalidStatusExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionAlreadyCapturedExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnsupportedMediaTypeHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 30
+            }
+        },
+        "/payment/points/{pointId}/channels": {
+            "get": {
+                "tags": [
+                    "Points"
+                ],
+                "summary": "List payment channels for a point",
+                "operationId": "get-point-channels",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GetPointChannelsResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 40
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}/refunds": {
+            "post": {
+                "tags": [
+                    "Refunds"
+                ],
+                "summary": "Create transaction refund",
+                "operationId": "create-transaction-refund",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Create transaction refund",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTransactionRefundRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CreateTransactionRefundResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotActiveExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/PointRefundsDisabledExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnsupportedMediaTypeHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 50
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}/refunds/{refundId}": {
+            "get": {
+                "tags": [
+                    "Refunds"
+                ],
+                "summary": "Get refund details",
+                "operationId": "get-refund-details",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/refundId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/GetRefundDetailsResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotActiveExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/PointRefundsDisabledExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 51
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}/blik": {
+            "post": {
+                "tags": [
+                    "BLIK"
+                ],
+                "summary": "Process BLIK transaction",
+                "description": "Process a BLIK payment transaction using a 6-digit code",
+                "operationId": "process-blik-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "BLIK transaction processing data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProcessBlikTransactionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProcessBlikTransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/TransactionInvalidStatusExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionMissingDataExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/ProviderNotSupportedExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionBlikProcessingErrorExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnsupportedMediaTypeHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 60
+            }
+        },
+        "/payment/points/{pointId}/transactions/{transactionId}/cards": {
+            "post": {
+                "tags": [
+                    "Cards"
+                ],
+                "summary": "Process card transaction",
+                "description": "Process a card payment using token",
+                "operationId": "process-card-transaction",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/pointId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/transactionId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Card transaction processing data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProcessCardTransactionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK - payment settled synchronously (no payer interaction left)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProcessCardTransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "actionId": "01kaqf5trc82bk6cqqanjcjwnq",
+                                        "status": "PAID",
+                                        "nextAction": null
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Accepted - payer must complete the 3DS challenge from nextAction",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProcessCardTransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "actionId": "01kaqf5trc82bk6cqqanjcjwnq",
+                                        "status": "PENDING",
+                                        "nextAction": {
+                                            "type": "3DS_SDK",
+                                            "method": "POST",
+                                            "url": "https://challenge.paymentic.com/01kaqf5trc82bk6cqqanjcjwnq",
+                                            "form": null,
+                                            "contentType": null,
+                                            "raw": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/TransactionInvalidStatusExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionMissingDataExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/ProviderNotSupportedExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionCardProcessingErrorExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PointNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/TransactionNotFoundExceptionSchema"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/NotFoundHttpExceptionSchema"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TooManyPaymentAttemptsExceptionSchema"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnsupportedMediaTypeHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 61
+            }
+        },
+        "/payment/ping": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "Ping the API",
+                "operationId": "ping",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "pong"
+                                                },
+                                                "environment": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "production",
+                                                        "sandbox"
+                                                    ],
+                                                    "example": "sandbox"
+                                                },
+                                                "tokenId": {
+                                                    "type": "string",
+                                                    "example": "2a77157f-7a73-413d-90a1-cd1263533d61"
+                                                },
+                                                "clientId": {
+                                                    "type": "string",
+                                                    "example": "72b631fe"
+                                                },
+                                                "version": {
+                                                    "type": "string",
+                                                    "example": "1.2"
+                                                },
+                                                "scopes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "*"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MethodNotAllowedHttpExceptionSchema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-priority": 100
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateTransactionRequest": {
+                "required": [
+                    "amount",
+                    "title"
+                ],
+                "properties": {
+                    "amount": {
+                        "description": "Amount in minor precision with up to 2 decimals",
+                        "type": "string",
+                        "format": "decimal",
+                        "example": "123.45"
+                    },
+                    "currency": {
+                        "description": "ISO 4217 3-letter currency code. Defaults to PLN when omitted.",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "default": "PLN",
+                        "maxLength": 3,
+                        "minLength": 3,
+                        "enum": [
+                            "PLN",
+                            "EUR"
+                        ],
+                        "example": "PLN"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 64,
+                        "minLength": 5,
+                        "example": "Order #12345"
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 128
+                    },
+                    "externalReferenceId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "redirect": {
+                        "properties": {
+                            "success": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "uri",
+                                "maxLength": 255
+                            },
+                            "failure": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "uri",
+                                "maxLength": 255
+                            }
+                        },
+                        "type": [
+                            "object",
+                            "null"
+                        ]
+                    },
+                    "customer": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomerDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "type": "object"
+                    },
+                    "order": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/OrderDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "type": "object"
+                    },
+                    "billingAddress": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomerFullDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "shippingAddress": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomerFullDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "cart": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "maxLength": 64
+                                },
+                                "quantity": {
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ],
+                                    "minimum": 1
+                                },
+                                "unitPrice": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "format": "decimal"
+                                },
+                                "type": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "default": "PRODUCT",
+                                    "enum": [
+                                        "PRODUCT",
+                                        "SHIPPING",
+                                        "DISCOUNT",
+                                        "SURCHARGE",
+                                        "GIFT_CARD"
+                                    ]
+                                },
+                                "productType": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "PHYSICAL",
+                                        "DIGITAL",
+                                        "SERVICE",
+                                        "VIRTUAL"
+                                    ]
+                                },
+                                "sku": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "maximum": 64
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "paymentMethod": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "BLIK",
+                            "PBL",
+                            "BNPL",
+                            "CARD",
+                            "MOBILE_WALLET"
+                        ],
+                        "example": "CARD"
+                    },
+                    "paymentChannel": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": null
+                    },
+                    "allowedPaymentMethods": {
+                        "description": "Whitelist of payment methods (optionally narrowed to a specific channel) that the gateway will present to the customer. Cannot be combined with hiddenPaymentMethods, paymentMethod or paymentChannel. When paymentChannel is null, all channels of that method are allowed.",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "required": [
+                                "paymentMethod"
+                            ],
+                            "properties": {
+                                "paymentMethod": {
+                                    "type": "string",
+                                    "enum": [
+                                        "BLIK",
+                                        "PBL",
+                                        "BNPL",
+                                        "CARD",
+                                        "MW",
+                                        "PAYSAFE"
+                                    ],
+                                    "example": "BLIK"
+                                },
+                                "paymentChannel": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "example": "blik-level0"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "hiddenPaymentMethods": {
+                        "description": "List of payment methods (optionally narrowed to a specific channel) that the gateway will hide from the customer. Cannot be combined with allowedPaymentMethods, paymentMethod or paymentChannel. When paymentChannel is null, all channels of that method are hidden.",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "required": [
+                                "paymentMethod"
+                            ],
+                            "properties": {
+                                "paymentMethod": {
+                                    "type": "string",
+                                    "enum": [
+                                        "BLIK",
+                                        "PBL",
+                                        "BNPL",
+                                        "CARD",
+                                        "MW",
+                                        "PAYSAFE"
+                                    ],
+                                    "example": "BNPL"
+                                },
+                                "paymentChannel": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "createRegistration": {
+                        "description": "If true, store customer payment instrument for recurring transactions.",
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "whitelabel": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "autoCapture": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "expiresAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ProcessBlikTransactionRequest": {
+                "required": [
+                    "type",
+                    "code"
+                ],
+                "properties": {
+                    "type": {
+                        "description": "BLIK transaction type",
+                        "type": "string",
+                        "enum": [
+                            "CODE",
+                            "ALIAS"
+                        ],
+                        "example": "CODE"
+                    },
+                    "code": {
+                        "description": "6-digit BLIK code (required when type is CODE)",
+                        "type": "string",
+                        "maxLength": 6,
+                        "minLength": 6,
+                        "pattern": "^\\d{6}$",
+                        "example": "777123"
+                    },
+                    "alias": {
+                        "description": "Alias data",
+                        "required": [
+                            "value"
+                        ],
+                        "properties": {
+                            "value": {
+                                "description": "Alias value",
+                                "type": "string",
+                                "maxLength": 64,
+                                "example": "new-alias-123"
+                            },
+                            "label": {
+                                "description": "Alias label",
+                                "type": "string",
+                                "maxLength": 35,
+                                "example": "joh...eo@ex...le.com"
+                            },
+                            "appId": {
+                                "description": "Alias app ID",
+                                "type": "string",
+                                "maxLength": 64,
+                                "example": "my-app-id"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ProcessCardTransactionRequest": {
+                "required": [
+                    "tokenType",
+                    "token",
+                    "browser"
+                ],
+                "properties": {
+                    "tokenType": {
+                        "description": "Type of token",
+                        "type": "string",
+                        "enum": [
+                            "SDK_CARD",
+                            "SDK_GOOGLE_PAY",
+                            "SDK_APPLE_PAY",
+                            "GOOGLE_PAY",
+                            "APPLE_PAY"
+                        ],
+                        "example": "SDK_CARD"
+                    },
+                    "token": {
+                        "description": "One-time card token issued by the CARD-CDE SDK",
+                        "type": "string",
+                        "maxLength": 5000,
+                        "example": "eyJhbGciOiJFUzI1NiJ9..."
+                    },
+                    "cardHolder": {
+                        "description": "Cardholder name (required for SDK_CARD)",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "Jan Kowalski"
+                    },
+                    "browser": {
+                        "description": "Payer browser data for 3-D Secure (EMV 3DS)",
+                        "required": [
+                            "userAgent",
+                            "language",
+                            "colorDepth",
+                            "screenWidth",
+                            "screenHeight",
+                            "timezoneOffset",
+                            "javaEnabled",
+                            "javascriptEnabled"
+                        ],
+                        "properties": {
+                            "userAgent": {
+                                "type": "string",
+                                "maxLength": 2048
+                            },
+                            "language": {
+                                "type": "string",
+                                "maxLength": 16,
+                                "example": "pl-PL"
+                            },
+                            "colorDepth": {
+                                "type": "integer",
+                                "enum": [
+                                    1,
+                                    4,
+                                    8,
+                                    15,
+                                    16,
+                                    24,
+                                    30,
+                                    32,
+                                    48
+                                ],
+                                "example": 24
+                            },
+                            "screenWidth": {
+                                "type": "integer",
+                                "example": 1920
+                            },
+                            "screenHeight": {
+                                "type": "integer",
+                                "example": 1080
+                            },
+                            "timezoneOffset": {
+                                "type": "integer",
+                                "example": -120
+                            },
+                            "javaEnabled": {
+                                "type": "boolean",
+                                "example": false
+                            },
+                            "javascriptEnabled": {
+                                "type": "boolean",
+                                "example": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTransactionRefundRequest": {
+                "required": [
+                    "amount",
+                    "title"
+                ],
+                "properties": {
+                    "amount": {
+                        "description": "Amount in minor precision with up to 2 decimals",
+                        "type": "string",
+                        "format": "decimal",
+                        "example": "123.45"
+                    },
+                    "reason": {
+                        "description": "Reason for refund",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "externalReferenceId": {
+                        "description": "External reference ID",
+                        "type": "string",
+                        "maxLength": 64
+                    }
+                },
+                "type": "object"
+            },
+            "GetPointChannelsResource": {
+                "properties": {
+                    "id": {
+                        "description": "Channel ID",
+                        "type": "string",
+                        "example": "mbank"
+                    },
+                    "available": {
+                        "description": "Whether the channel is available for use",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "method": {
+                        "description": "Payment method",
+                        "type": "string",
+                        "example": "PBL"
+                    },
+                    "name": {
+                        "description": "Channel name",
+                        "type": "string",
+                        "example": "mBank"
+                    },
+                    "image": {
+                        "description": "Channel image",
+                        "properties": {
+                            "default": {
+                                "description": "Default channel image",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "url",
+                                "example": "https://example.com/image.png"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "amount": {
+                        "description": "Minimum and maximum transaction amount",
+                        "properties": {
+                            "minimum": {
+                                "description": "Minimum transaction amount",
+                                "type": "string",
+                                "format": "decimal",
+                                "example": "10.00"
+                            },
+                            "maximum": {
+                                "description": "Maximum transaction amount",
+                                "type": "string",
+                                "format": "decimal",
+                                "example": "10000.00"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "aliases": {
+                        "description": "Channel aliases",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "currencies": {
+                        "description": "Supported currencies",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "commission": {
+                        "description": "Commission settings",
+                        "properties": {
+                            "value": {
+                                "description": "Commission value",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "decimal",
+                                "example": "1.65"
+                            },
+                            "minimum": {
+                                "description": "Minimum commission amount",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "decimal",
+                                "example": "0.30"
+                            },
+                            "fixed": {
+                                "description": "Whether commission is fixed",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "decimal",
+                                "example": "2.50"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "authorization": {
+                        "description": "Authorization settings",
+                        "properties": {
+                            "type": {
+                                "description": "Authorization type",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "REDIRECT",
+                                        "MULTI_FACTOR",
+                                        "SCAN_CODE",
+                                        "APP_NOTIFICATION"
+                                    ]
+                                }
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "paymentType": {
+                        "description": "Payment type",
+                        "type": "string",
+                        "enum": [
+                            "INSTANT",
+                            "PRE_AUTHORIZATION",
+                            "OFFLINE"
+                        ],
+                        "example": "INSTANT"
+                    },
+                    "compliance": {
+                        "description": "Compliance items for the channel",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "Compliance item identifier",
+                                    "type": "string",
+                                    "example": "info_gdpr"
+                                },
+                                "type": {
+                                    "description": "Compliance type",
+                                    "type": "string",
+                                    "enum": [
+                                        "DISPLAYABLE",
+                                        "ACCEPTABLE"
+                                    ],
+                                    "example": "DISPLAYABLE"
+                                },
+                                "required": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "checked": {
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ],
+                                    "example": false
+                                },
+                                "content": {
+                                    "properties": {
+                                        "text": {
+                                            "type": "string",
+                                            "example": "Administratorem Twoich danych jest Paymentic..."
+                                        },
+                                        "html": {
+                                            "type": "string",
+                                            "example": "Administratorem Twoich danych jest <b>Paymentic</b>..."
+                                        },
+                                        "markdown": {
+                                            "type": "string",
+                                            "example": "Administratorem Twoich danych jest **Paymentic**..."
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "example": "privacy_policy"
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "example": "Polityka prywatności"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://example.com/pp.pdf"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "enablingAt": {
+                        "description": "Channel enabling date",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "disablingAt": {
+                        "description": "Channel disabling date",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTransactionRefundResource": {
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/parameters/refundId"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/RefundStatusSchema"
+                    }
+                },
+                "type": "object"
+            },
+            "GetRefundDetailsResource": {
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/parameters/refundId"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/RefundStatusSchema"
+                    },
+                    "amount": {
+                        "description": "Refund amount as a string-encoded decimal",
+                        "type": "string",
+                        "example": "123.45"
+                    },
+                    "reason": {
+                        "description": "Reason for refund",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "externalReferenceId": {
+                        "description": "External reference ID",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "createdAt": {
+                        "description": "Refund creation timestamp",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "description": "Refund update timestamp",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTransactionResource": {
+                "properties": {
+                    "id": {
+                        "description": "Transaction ID",
+                        "type": "string",
+                        "example": "ABCD-123-XYZ-9876"
+                    },
+                    "redirectUrl": {
+                        "description": "Transaction URL",
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://pay.paymentic.com/ABCD-123-XYZ-9876?token=..."
+                    },
+                    "whitelabel": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "GetTransactionDetailsResource": {
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/parameters/transactionId",
+                        "description": "Transaction ID"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/TransactionStatusSchema"
+                    },
+                    "amount": {
+                        "description": "Transaction amount as a string-encoded decimal",
+                        "type": "string",
+                        "example": "123.45"
+                    },
+                    "currency": {
+                        "description": "ISO 4217 currency code",
+                        "type": "string",
+                        "example": "PLN"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Order #12345"
+                    },
+                    "commission": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "1.23"
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "Payment for order #12345"
+                    },
+                    "customer": {
+                        "$ref": "#/components/schemas/CustomerDataSchema"
+                    },
+                    "order": {
+                        "$ref": "#/components/schemas/OrderDataSchema"
+                    },
+                    "billingAddress": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomerFullDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "shippingAddress": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomerFullDataSchema"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "externalReferenceId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "EXT-REF-123"
+                    },
+                    "redirect": {
+                        "properties": {
+                            "success": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "url",
+                                "example": "https://merchant.example/success"
+                            },
+                            "failure": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "url",
+                                "example": "https://merchant.example/failure"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "paymentMethod": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "VISA"
+                    },
+                    "paymentChannel": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": null
+                    },
+                    "whitelabel": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "cart": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "$ref": "#/components/schemas/CartItemSchema"
+                        }
+                    },
+                    "autoCapture": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "isCaptured": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "capturedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "paidAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "createdAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "expiresAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "GetTransactionsResource": {
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/TransactionIdSchema",
+                        "description": "Transaction ID"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/TransactionStatusSchema"
+                    },
+                    "amount": {
+                        "description": "Transaction amount as a string-encoded decimal",
+                        "type": "string",
+                        "example": "123.45"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Order #12345"
+                    },
+                    "commission": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "1.23"
+                    },
+                    "customerName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "John Doe"
+                    },
+                    "customerEmail": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "externalReferenceId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "EXT-REF-123"
+                    },
+                    "paymentMethod": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "BLIK"
+                    },
+                    "paymentChannel": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "blik-psp"
+                    },
+                    "orderId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "ORD-12345"
+                    },
+                    "blikId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "BLIK123"
+                    },
+                    "cardBin": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "example": "411111"
+                    },
+                    "paidAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "createdAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ProcessBlikTransactionResource": {
+                "properties": {
+                    "actionId": {
+                        "description": "Unique identifier for the BLIK action",
+                        "type": "string",
+                        "format": "ulid",
+                        "example": "01kaqf5trc82bk6cqqanjcjwnq"
+                    },
+                    "alias": {
+                        "description": "BLIK alias information",
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "ProcessCardTransactionResource": {
+                "properties": {
+                    "actionId": {
+                        "description": "Unique identifier for the action",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "ulid",
+                        "example": "01kaqf5trc82bk6cqqanjcjwnq"
+                    },
+                    "status": {
+                        "description": "Payment action status",
+                        "type": "string",
+                        "enum": [
+                            "CREATED",
+                            "PENDING",
+                            "PAID",
+                            "SETTLED",
+                            "FAILED",
+                            "CANCELED"
+                        ],
+                        "example": "PENDING"
+                    },
+                    "nextAction": {
+                        "description": "Payer interaction required to continue (3DS challenge, embedded via the Challenge SDK); null when there is nothing left for the payer to do",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "example": "3DS_SDK"
+                            },
+                            "method": {
+                                "type": "string",
+                                "example": "POST"
+                            },
+                            "url": {
+                                "type": "string",
+                                "example": "https://challenge.paymentic.com/01kaqf5trc82bk6cqqanjcjwnq"
+                            },
+                            "form": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "example": null
+                            },
+                            "contentType": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "example": null
+                            },
+                            "raw": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "example": null
+                            }
+                        },
+                        "type": [
+                            "object",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "MethodNotAllowedHttpExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "METHOD_NOT_ALLOWED"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Method not allowed for "
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#METHOD_NOT_ALLOWED"
+                                },
+                                "details": {
+                                    "properties": {
+                                        "allowedMethods": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "GET"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "NotFoundHttpExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "PATH_NOT_FOUND"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "The path / could not be found"
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#PATH_NOT_FOUND"
+                                },
+                                "details": {
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ],
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PointNotActiveExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "POINT_NOT_ACTIVE"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Point not active."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#POINT_NOT_ACTIVE"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PointNotFoundExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "POINT_NOT_FOUND"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Point not found."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#POINT_NOT_FOUND"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PointRefundsDisabledExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "POINT_REFUNDS_DISABLED"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Point refunds disabled."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#POINT_REFUNDS_DISABLED"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ProviderNotSupportedExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "PROVIDER_NOT_SUPPORTED"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Provider not supported"
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#PROVIDER_NOT_SUPPORTED"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TooManyPaymentAttemptsExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TOO_MANY_PAYMENT_ATTEMPTS"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Too many payment attempts."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TOO_MANY_PAYMENT_ATTEMPTS"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionAlreadyCapturedExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_ALREADY_CAPTURED"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction already captured."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_ALREADY_CAPTURED"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionBlikProcessingErrorExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_BLIK_PROCESSING_ERROR"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction BLIK processing error."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_BLIK_PROCESSING_ERROR"
+                                },
+                                "details": {
+                                    "properties": {
+                                        "blikErrorCode": {
+                                            "type": "string",
+                                            "example": "DECLINED"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionCardProcessingErrorExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_CARD_PROCESSING_ERROR"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction card processing error."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_CARD_PROCESSING_ERROR"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": {
+                                        "cardErrorCode": "CARD_INSUFFICIENT_FUNDS"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionInvalidStatusExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_INVALID_STATUS"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction invalid status."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_INVALID_STATUS"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionMissingDataExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_MISSING_DATA"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction missing data."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_MISSING_DATA"
+                                },
+                                "details": {
+                                    "properties": {
+                                        "field": {
+                                            "type": "string",
+                                            "example": "customer.email"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionNotFoundExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "TRANSACTION_NOT_FOUND"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Transaction not found."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#TRANSACTION_NOT_FOUND"
+                                },
+                                "details": {
+                                    "type": "object",
+                                    "example": null
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UnsupportedMediaTypeHttpExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "UNSUPPORTED_MEDIA_TYPE"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "The multipart/form-data content type is not supported for this route. Supported content types: application/json."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#UNSUPPORTED_MEDIA_TYPE"
+                                },
+                                "details": {
+                                    "properties": {
+                                        "supportedContentTypes": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "application/json"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationExceptionSchema": {
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "VALIDATION_ERROR"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "The selected pointId is invalid."
+                                },
+                                "docsUrl": {
+                                    "type": "string",
+                                    "example": "https://docs.paymentic.com/errors#VALIDATION_ERROR"
+                                },
+                                "details": {
+                                    "properties": {
+                                        "field": {
+                                            "type": "string",
+                                            "example": "pointId"
+                                        },
+                                        "messages": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The selected pointId is invalid."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CartItemSchema": {
+                "properties": {
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "Harry Potter"
+                    },
+                    "quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "minimum": 1,
+                        "example": 1
+                    },
+                    "unitPrice": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "decimal",
+                        "example": "19.99"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerDataSchema": {
+                "properties": {
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "pattern": "^[\\p{L}' -]+$",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "john.doe@example.com"
+                    },
+                    "emailVerified": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "phone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "+48123456789"
+                    },
+                    "phoneVerified": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "country": {
+                        "description": "ISO 3166-1 alpha-2",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2,
+                        "minLength": 2,
+                        "example": "PL"
+                    },
+                    "locale": {
+                        "description": "ISO 639-1 alpha-2",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2,
+                        "minLength": 2
+                    },
+                    "ip": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "userAgent": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 128
+                    },
+                    "fingerprint": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerFullDataSchema": {
+                "properties": {
+                    "firstName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "minLength": 2,
+                        "pattern": "/^[\\p{L}'-]+$/u",
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "minLength": 2,
+                        "pattern": "/^[\\p{L}'-]+$/u",
+                        "example": "Doe"
+                    },
+                    "street": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "ul. Kowalska"
+                    },
+                    "buildingNumber": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 16,
+                        "example": "26"
+                    },
+                    "flat": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 16
+                    },
+                    "city": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64,
+                        "example": "Bielsko-Biała"
+                    },
+                    "region": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "postalCode": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 16,
+                        "example": "43-316"
+                    },
+                    "state": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "country": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "ISO-3166-1 alpha-2",
+                        "maxLength": 2,
+                        "minLength": 2,
+                        "example": "PL"
+                    },
+                    "company": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    }
+                },
+                "type": "object"
+            },
+            "OrderDataSchema": {
+                "properties": {
+                    "id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 64
+                    },
+                    "shippingMethod": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "VIRTUAL",
+                            "TRACKED_DELIVERY",
+                            "UNTRACKED_DELIVERY",
+                            "IN_STORE_PICKUP",
+                            "PARCEL_PICKUP",
+                            "LOCKER_PICKUP",
+                            "HYBRID",
+                            "OTHER"
+                        ]
+                    },
+                    "trackingNumber": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "customerType": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "B2B",
+                            "B2C"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "PointIdSchema": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}$",
+                "example": "b8e6e2fc"
+            },
+            "RefundIdSchema": {
+                "type": "string",
+                "maxLength": 11,
+                "minLength": 11,
+                "pattern": "^[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{3}$",
+                "example": "AB1-AB2-AB3"
+            },
+            "RefundStatusSchema": {
+                "type": "string",
+                "enum": [
+                    "CREATED",
+                    "ACCEPTED",
+                    "PENDING",
+                    "DONE",
+                    "REJECTED",
+                    "CANCELLED"
+                ]
+            },
+            "TransactionIdSchema": {
+                "type": "string",
+                "maxLength": 14,
+                "minLength": 14,
+                "pattern": "^[A-Z0-9]{4}-[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{4}$",
+                "example": "ABC1-AB2-AB3-ABC4"
+            },
+            "TransactionStatusSchema": {
+                "type": "string",
+                "enum": [
+                    "CREATED",
+                    "PENDING",
+                    "PAID",
+                    "FAILED",
+                    "EXPIRED"
+                ]
+            }
+        },
+        "parameters": {
+            "pointId": {
+                "name": "pointId",
+                "in": "path",
+                "description": "Point ID",
+                "required": true,
+                "schema": {
+                    "$ref": "#/components/schemas/PointIdSchema"
+                }
+            },
+            "refundId": {
+                "name": "refundId",
+                "in": "path",
+                "description": "Refund ID",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{3}$"
+                },
+                "example": "AB1-AB2-AB3"
+            },
+            "transactionId": {
+                "name": "transactionId",
+                "in": "path",
+                "description": "Transaction ID",
+                "required": true,
+                "schema": {
+                    "$ref": "#/components/schemas/TransactionIdSchema"
+                }
+            },
+            "Content-Type": {
+                "name": "Content-Type",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "application/json"
+                }
+            },
+            "X-Paymentic-Event": {
+                "name": "X-Paymentic-Event",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "PAYMENT.TRANSACTION_STATUS_CHANGED",
+                        "PAYMENT.REFUND_STATUS_CHANGED",
+                        "PAYMENT.TRANSACTION_BLIK_STATUS_CHANGED",
+                        "PAYMENT.BLIK_ALIAS_STATUS_CHANGED"
+                    ]
+                }
+            },
+            "X-Paymentic-Notification-Id": {
+                "name": "X-Paymentic-Notification-Id",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "format": "ulid",
+                    "example": "01j96yn02bhbv8j1jjtk36zn2t"
+                }
+            },
+            "X-Paymentic-Signature": {
+                "name": "X-Paymentic-Signature",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "5Fil+PpabLxsKwo3rWj9+o6gAi4ub93fismBewbYz46mHt7pjPHcHELUVw8McZ5nUb3feMVVBl+dPzXq2XgLQ=="
+                }
+            },
+            "X-Paymentic-Time": {
+                "name": "X-Paymentic-Time",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-01-01T12:00:00+00:00"
+                }
+            },
+            "User-Agent": {
+                "name": "User-Agent",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Paymentic/1.2"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerToken": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Transactions",
+            "description": "Create payment transactions, check their status and capture authorized payments."
+        },
+        {
+            "name": "Points",
+            "description": "List payment channels available for a point."
+        },
+        {
+            "name": "Refunds",
+            "description": "Create refunds for paid transactions and check their status."
+        },
+        {
+            "name": "BLIK",
+            "description": "Process BLIK payments for existing transactions."
+        },
+        {
+            "name": "Cards",
+            "description": "Process card payments for existing transactions."
+        },
+        {
+            "name": "System",
+            "description": "Health check and diagnostics."
+        }
+    ],
+    "webhooks": {
+        "PAYMENT.BLIK_ALIAS_STATUS_CHANGED": {
+            "post": {
+                "operationId": "366858390297c479eaef11a7e0453d56",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/User-Agent"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Content-Type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Event"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Notification-Id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Time"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Signature"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment BLIK alias status changed",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "aliasId": {
+                                        "type": "string",
+                                        "format": "ulid",
+                                        "maxLength": 26,
+                                        "minLength": 26,
+                                        "example": "01J8ME1QDJKZT7YB9V54K4Q2ZC"
+                                    },
+                                    "pointId": {
+                                        "$ref": "#/components/schemas/PointIdSchema"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "CREATED",
+                                            "ACTIVE",
+                                            "EXPIRED",
+                                            "UNREGISTERED"
+                                        ]
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "UID",
+                                            "PAYID"
+                                        ]
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    },
+                                    "expiresAt": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "ISO-8601",
+                                        "example": "2026-07-28T12:00:00+02:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "OK"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "PAYMENT.REFUND_STATUS_CHANGED": {
+            "post": {
+                "operationId": "c83a7df2ce785ddd3db1e0e7d956c8f7",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/User-Agent"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Content-Type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Event"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Notification-Id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Time"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Signature"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment refund status changed",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "refundId": {
+                                        "$ref": "#/components/schemas/RefundIdSchema"
+                                    },
+                                    "transactionId": {
+                                        "$ref": "#/components/schemas/TransactionIdSchema"
+                                    },
+                                    "pointId": {
+                                        "$ref": "#/components/schemas/PointIdSchema"
+                                    },
+                                    "status": {
+                                        "$ref": "#/components/schemas/RefundStatusSchema"
+                                    },
+                                    "amount": {
+                                        "type": "string",
+                                        "format": "decimal",
+                                        "example": "123.45"
+                                    },
+                                    "externalReferenceId": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "maxLength": 64
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "OK"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "PAYMENT.TRANSACTION_BLIK_STATUS_CHANGED": {
+            "post": {
+                "operationId": "99f40a4c6d91af5650345ded11e7853b",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/User-Agent"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Content-Type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Event"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Notification-Id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Time"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Signature"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment transaction BLIK status changed",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "transactionId": {
+                                        "$ref": "#/components/schemas/TransactionIdSchema"
+                                    },
+                                    "actionId": {
+                                        "type": "string",
+                                        "format": "ulid",
+                                        "maxLength": 26,
+                                        "minLength": 26,
+                                        "example": "01J8ME1QDJKZT7YB9V54K4Q2ZC"
+                                    },
+                                    "externalStatus": {
+                                        "type": "string",
+                                        "enum": [
+                                            "BLIK_AUTHORIZED",
+                                            "BLIK_CODE_NOT_FOUND",
+                                            "BLIK_CODE_EXPIRED",
+                                            "BLIK_SYSTEM_DECLINED",
+                                            "BLIK_CUSTOMER_DECLINED",
+                                            "BLIK_INSUFFICIENT_FUNDS",
+                                            "BLIK_TIMEOUT",
+                                            "BLIK_CUSTOMER_LIMIT",
+                                            "BLIK_ALIAS_NONUNIQUE",
+                                            "BLIK_ERROR"
+                                        ]
+                                    },
+                                    "externalId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "OK"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "PAYMENT.TRANSACTION_STATUS_CHANGED": {
+            "post": {
+                "operationId": "49a0f2a6d7d6d2cc7f7ec2c623665841",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/User-Agent"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Content-Type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Event"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Notification-Id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Time"
+                    },
+                    {
+                        "$ref": "#/components/parameters/X-Paymentic-Signature"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment transaction status changed",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "transactionId": {
+                                        "$ref": "#/components/schemas/TransactionIdSchema"
+                                    },
+                                    "pointId": {
+                                        "$ref": "#/components/schemas/PointIdSchema"
+                                    },
+                                    "status": {
+                                        "$ref": "#/components/schemas/TransactionStatusSchema"
+                                    },
+                                    "amount": {
+                                        "type": "string",
+                                        "format": "decimal",
+                                        "example": "123.45"
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "format": "ISO-4217",
+                                        "maxLength": 3,
+                                        "minLength": 3,
+                                        "example": "PLN"
+                                    },
+                                    "commission": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "decimal",
+                                        "example": "12.34"
+                                    },
+                                    "externalReferenceId": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "maxLength": 64
+                                    },
+                                    "paymentMethod": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "paymentChannel": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "OK"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
