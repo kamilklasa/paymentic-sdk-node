@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter @kamilklasa/paymentic-sdk-node build",
-    "typecheck": "pnpm --filter @kamilklasa/paymentic-sdk-node typecheck && pnpm --filter paymentic-next-example check",
+    "typecheck": "pnpm build && pnpm --filter paymentic-next-example check",
     "lint": "oxlint packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts commitlint.config.cjs",
     "format": "oxfmt packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts package.json packages/sdk/package.json examples/nextjs/package.json .oxfmtrc.json .lintstagedrc.json commitlint.config.cjs",
     "format:check": "oxfmt --check packages/sdk/src packages/sdk/test examples/nextjs/app examples/nextjs/checkout.test.mjs examples/nextjs/proxy.ts scripts package.json packages/sdk/package.json examples/nextjs/package.json .oxfmtrc.json .lintstagedrc.json commitlint.config.cjs",
