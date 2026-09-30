@@ -1,0 +1,50 @@
+name: Publish SDK to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sdk-npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Verify release version and repository
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          const pkg = JSON.parse(readFileSync('packages/sdk/package.json', 'utf8'));
+          assert.match(pkg.version, /^\d+\.\d+\.\d+$/, 'Use a stable SemVer version');
+          assert.equal(process.env.RELEASE_TAG, `sdk-v${pkg.version}`, 'Tag must match SDK version');
+          assert.equal(pkg.repository?.url, `git+https://github.com/${process.env.GITHUB_REPOSITORY}.git`, 'Set the actual GitHub repository URL before publishing');
+          assert.equal(pkg.repository?.directory, 'packages/sdk');
+          NODE
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check:release
+      - name: Publish SDK using npm trusted publishing
+        working-directory: packages/sdk
+        run: npm publish --access public --provenance
